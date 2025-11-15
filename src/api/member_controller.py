@@ -35,5 +35,5 @@ def sign_in(sign_in_requset: SignInRequest,
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, )
 
     access_token: str = member_service.create_jwt(member.email)
-
+    
     return JWTRESPONSE(access_token=access_token)
