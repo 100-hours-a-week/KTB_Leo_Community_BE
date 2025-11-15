@@ -11,3 +11,7 @@ class SignUpResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class JWTRESPONSE(BaseModel):
+    access_token: str

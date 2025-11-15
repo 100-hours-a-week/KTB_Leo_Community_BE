@@ -27,3 +27,7 @@ class MemberInDB(BaseModel):
     class Config:
         from_attributes = True
 
+
+class SignInRequest(BaseModel):
+    email: str
+    password: str
