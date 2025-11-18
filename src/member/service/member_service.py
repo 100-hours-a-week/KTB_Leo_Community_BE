@@ -1,14 +1,12 @@
-from datetime import timedelta
-
-import bcrypt
-
-from repository.member_repository import MemberRepository
-from fastapi import HTTPException, status
-from jose import jwt
 from datetime import datetime, timedelta
 
-from schema.request import MemberInDB
-from schema.response import SignUpResponse
+import bcrypt
+from fastapi import HTTPException, status
+from jose import jwt
+
+from member.repository.member_repository import MemberRepository
+from member.schema.member_request import MemberInDB
+from member.schema.member_response import SignUpResponse
 
 
 class MemberService:

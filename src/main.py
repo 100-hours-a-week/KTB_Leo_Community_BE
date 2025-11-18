@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from api import member_controller
+
+from member.api import member_controller
 
 app = FastAPI()
 

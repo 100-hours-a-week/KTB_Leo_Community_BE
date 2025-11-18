@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 
-from repository.member_repository import MemberRepository
-from schema.request import SignUpRequest, SignInRequest, MemberInDB
-from schema.response import SignUpResponse, JWTRESPONSE
-from service.member_service import MemberService
+from member.repository.member_repository import MemberRepository
+from member.schema.member_request import SignUpRequest, SignInRequest, MemberInDB
+from member.schema.member_response import SignUpResponse, JWTRESPONSE
+from member.service.member_service import MemberService
 
 router = APIRouter(prefix="/members")
 
@@ -35,5 +35,5 @@ def sign_in(sign_in_requset: SignInRequest,
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, )
 
     access_token: str = member_service.create_jwt(member.email)
-    
+
     return JWTRESPONSE(access_token=access_token)
