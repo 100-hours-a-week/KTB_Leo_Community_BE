@@ -1,8 +1,7 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+from database.orm import Base
 
 
 class Member(Base):
@@ -16,4 +15,4 @@ class Member(Base):
 
     posts = relationship("Post", back_populates="author")
     liked_posts = relationship("PostLike", back_populates="member")
-    comments = relationship("Comment", back_populates="author")
+    comments = relationship("Comment", back_populates="member")
