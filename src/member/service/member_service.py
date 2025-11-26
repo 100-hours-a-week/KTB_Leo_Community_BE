@@ -4,8 +4,8 @@ import bcrypt
 from fastapi import HTTPException, status
 from jose import jwt
 
+from member.model.member import Member
 from member.repository.member_repository import MemberRepository
-from member.schema.member_request import MemberInDB
 from member.schema.member_response import SignUpResponse
 
 
@@ -19,11 +19,10 @@ class MemberService:
 
     def create_member(self, sign_up_requset):
         if self.repository.find_by_email(sign_up_requset.email):
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, )
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
         hashed_password: str = self.hash_password(sign_up_requset.password)
 
-        member: MemberInDB = MemberInDB(
-            id=self.repository.get_next_id(),
+        member = Member(
             email=sign_up_requset.email,
             password=hashed_password,
             nickname=sign_up_requset.nickname,
