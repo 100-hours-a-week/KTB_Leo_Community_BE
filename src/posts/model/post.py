@@ -1,9 +1,9 @@
 import datetime
 
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+from database.orm import Base
 
 
 class Post(Base):
@@ -25,3 +25,6 @@ class Post(Base):
     author = relationship("Member", back_populates="posts")
     likes = relationship("PostLike", back_populates="post", cascade="all, delete-orphan")
     comments = relationship("Comment", back_populates="post", cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f"<Post(id={self.id}, title={self.title}), content={self.content}>"
