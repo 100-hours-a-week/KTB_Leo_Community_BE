@@ -1,5 +1,6 @@
 from typing import Optional
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from member.model.member import Member
@@ -16,7 +17,9 @@ class MemberRepository:
         return member
 
     def find_by_email(self, email: str) -> Optional[Member]:
-        return self.session.query(Member).filter(Member.email == email).first()
+        return self.session.scalar(
+            select(Member).where(Member.email == email)
+        )
 
     def find_all(self) -> list[type[Member]]:
         return self.session.query(Member).all()
