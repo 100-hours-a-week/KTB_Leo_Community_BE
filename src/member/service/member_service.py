@@ -54,3 +54,9 @@ class MemberService:
             "exp": datetime.now() + timedelta(days=1)
         }, self.secret_key,
             algorithm=self.jwt_algorithm)
+
+    def decode_jwt(self, access_token: str) -> str:
+        payload = jwt.decode(access_token, self.secret_key, algorithms=[self.jwt_algorithm])
+
+        # 만료 시키는 부분
+        return payload["sub"]
