@@ -1,8 +1,5 @@
-from datetime import datetime, timedelta
-
 import bcrypt
 from fastapi import HTTPException, status
-from jose import jwt
 
 from member.model.member import Member
 from member.repository.member_repository import MemberRepository
@@ -11,8 +8,6 @@ from member.schema.member_response import SignUpResponse
 
 class MemberService:
     encoding_type: str = 'utf-8'
-    secret_key: str = "0fc33b35277d7107b30cea8d8ebbab01714b1916329356012f7c3ccab1c72fe2"
-    jwt_algorithm: str = "HS256"
 
     def __init__(self, member_repository: MemberRepository):
         self.repository = member_repository
@@ -47,16 +42,3 @@ class MemberService:
         # todo : 예외처리
         return bcrypt.checkpw(plain_password.encode(self.encoding_type),
                               hashed_password.encode(self.encoding_type))
-
-    def create_jwt(self, member_email: str) -> str:
-        return jwt.encode({
-            "sub": member_email,
-            "exp": datetime.now() + timedelta(days=1)
-        }, self.secret_key,
-            algorithm=self.jwt_algorithm)
-
-    def decode_jwt(self, access_token: str) -> str:
-        payload = jwt.decode(access_token, self.secret_key, algorithms=[self.jwt_algorithm])
-
-        # 만료 시키는 부분
-        return payload["sub"]
