@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class SignUpResponse(BaseModel):
+class MemberResponse(BaseModel):
     id: int
     email: str
     nickname: str
@@ -11,7 +11,3 @@ class SignUpResponse(BaseModel):
 
     class Config:
         from_attributes = True
-
-
-class JWTRESPONSE(BaseModel):
-    access_token: str

@@ -1,7 +1,7 @@
 from fastapi import Request, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 
-from auth.utils import JwtUtils
+from auth.utils.jwt_provider import JwtProvider
 from database.connection import get_db
 from member.model.member import Member
 from member.repository.member_repository import MemberRepository
@@ -19,7 +19,7 @@ def get_current_member(
             detail="인증 토큰이 쿠키에 없습니다."
         )
 
-    member_id = JwtUtils.decode_token(access_token)
+    member_id = JwtProvider.decode_token(access_token)
     if not member_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
