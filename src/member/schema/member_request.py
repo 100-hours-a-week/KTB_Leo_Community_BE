@@ -17,17 +17,6 @@ class SignUpRequest(BaseModel):
         return v.strip().lower()
 
 
-class MemberInDB(BaseModel):
-    id: int
-    email: str
-    password: str
-    nickname: str
-    profile_image: Optional[str] = None
-
-    class Config:
-        from_attributes = True
-
-
 class SignInRequest(BaseModel):
     email: str
     password: str
