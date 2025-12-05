@@ -3,18 +3,20 @@ from fastapi import HTTPException, status
 from comments.model.comment import Comment
 from comments.repository.comment_repository import CommentRepository
 from comments.schema.comment_request import CreateCommentRequest, UpdateCommentRequest
+from posts.repository.post_repository import PostRepository
 
 
 class CommentService:
-    def __init__(self, comment_repository: CommentRepository):
+    def __init__(self, comment_repository: CommentRepository, post_repository: PostRepository):
         self.comment_repository = comment_repository
+        self.post_repository = post_repository
 
     def get_comments(self, post_id: int) -> list[Comment]:
         return self.comment_repository.find_by_post_id(post_id)
 
     def create_comment(self, member_id: int, request: CreateCommentRequest) -> Comment:
 
-        found = self.comment_repository.find_by_post_id(request.post_id)
+        found = self.post_repository.find_by_id(request.post_id)
         if not found:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="게시글이 존재하지 않습니다")
 

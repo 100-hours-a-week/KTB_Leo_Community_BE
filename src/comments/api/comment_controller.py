@@ -8,13 +8,15 @@ from comments.schema.comment_response import CommentResponse
 from comments.service.comment_service import CommentService
 from database.connection import get_db
 from member.model.member import Member
+from posts.repository.post_repository import PostRepository
 
 router = APIRouter(prefix="/comments", tags=["comments"])
 
 
 def get_comment_service(db: Session = Depends(get_db)):
-    repository = CommentRepository(db)
-    return CommentService(repository)
+    comment_repo = CommentRepository(db)
+    post_repo = PostRepository(db)
+    return CommentService(comment_repo, post_repo)
 
 
 @router.get("", response_model=list[CommentResponse])
