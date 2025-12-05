@@ -40,10 +40,9 @@ class MemberService:
         ).decode(self.encoding_type)
 
     def verify_password(self, plain_password, hashed_password) -> bool:
-        return bcrypt.checkpw(
-            plain_password.encode(self.encoding_type),
-            hashed_password.encode(self.encoding_type)
-        )
+        # todo : 예외처리
+        return bcrypt.checkpw(plain_password.encode(self.encoding_type),
+                              hashed_password.encode(self.encoding_type))
 
     def login(self, email: str, password: str) -> dict:
         member = self.repository.find_by_email(email)

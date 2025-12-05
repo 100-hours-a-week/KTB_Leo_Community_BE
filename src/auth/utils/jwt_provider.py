@@ -1,5 +1,6 @@
 import os
 from datetime import datetime, timedelta, timezone
+
 from typing import Any
 
 from dotenv import load_dotenv
@@ -16,12 +17,14 @@ class JwtProvider:
 
     @classmethod
     def create_access_token(cls, subject: Any) -> str:
+
         expire = datetime.now(timezone.utc) + timedelta(minutes=cls.ACCESS_TOKEN_EXPIRE_MINUTES)
         to_encode = {"sub": str(subject), "exp": expire}
         return jwt.encode(to_encode, cls.SECRET_KEY, algorithm=cls.ALGORITHM)
 
     @classmethod
     def create_refresh_token(cls, subject: Any) -> str:
+
         expire = datetime.now(timezone.utc) + timedelta(days=cls.REFRESH_TOKEN_EXPIRE_DAYS)
         to_encode = {"sub": str(subject), "exp": expire}
         return jwt.encode(to_encode, cls.SECRET_KEY, algorithm=cls.ALGORITHM)
