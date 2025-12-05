@@ -30,7 +30,6 @@ def get_posts(
 def get_post(
         post_id: int,
         service: PostService = Depends(get_post_service),
-
 ):
     return service.get_post(post_id)
 
