@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List  # List 타입 힌트 추가
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -21,5 +21,10 @@ class MemberRepository:
             select(Member).where(Member.email == email)
         )
 
-    def find_all(self) -> list[type[Member]]:
-        return self.session.query(Member).all()
+    def find_by_id(self, member_id: int) -> Optional[Member]:
+        return self.session.scalar(
+            select(Member).where(Member.id == member_id)
+        )
+
+    def find_all(self) -> List[Member]:
+        return self.session.scalars(select(Member)).all()
