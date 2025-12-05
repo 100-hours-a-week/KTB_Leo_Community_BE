@@ -14,7 +14,7 @@ class Post(Base):
     content = Column(Text, nullable=False)
     article_image = Column(String(100), nullable=True)
 
-    author_id = Column(Integer, ForeignKey("member.id"), nullable=False, index=True)
+    member_id = Column(Integer, ForeignKey("member.id"), nullable=False, index=True)
     view_count = Column(Integer, default=0)
     likes_count = Column(Integer, default=0)
     comments_count = Column(Integer, default=0)
@@ -22,7 +22,7 @@ class Post(Base):
     created_at = Column(DateTime, default=datetime.datetime.now)
     updated_at = Column(DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
-    author = relationship("Member", back_populates="posts")
+    member = relationship("Member", back_populates="posts")
     likes = relationship("PostLike", back_populates="post", cascade="all, delete-orphan")
     comments = relationship("Comment", back_populates="post", cascade="all, delete-orphan")
 

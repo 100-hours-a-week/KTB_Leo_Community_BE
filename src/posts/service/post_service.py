@@ -24,14 +24,14 @@ class PostService:
             title=request.title,
             content=request.content,
             article_image=request.article_image_url,
-            author_id=member_id
+            member_id=member_id
         )
         return self.post_repository.save(post)
 
     def update_post(self, post_id: int, request: UpdatePostRequest, member_id: int) -> Post:
         post = self.get_post(post_id)
 
-        if post.author_id != member_id:
+        if post.member_id != member_id:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
 
         if request.title is not None:
@@ -45,6 +45,6 @@ class PostService:
 
     def delete_post(self, post_id: int, member_id: int) -> None:
         post = self.get_post(post_id)
-        if post.author_id != member_id:
+        if post.member_id != member_id:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
         self.post_repository.delete(post)

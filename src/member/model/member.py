@@ -13,6 +13,6 @@ class Member(Base):
     nickname = Column(String(50), nullable=False)
     profile_image = Column(String(255), nullable=True)
 
-    posts = relationship("Post", back_populates="author")
+    posts = relationship("Post", back_populates="member")
     liked_posts = relationship("PostLike", back_populates="member")
     comments = relationship("Comment", back_populates="member")
