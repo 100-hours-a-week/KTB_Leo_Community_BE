@@ -28,3 +28,9 @@ class Post(Base):
 
     def __repr__(self):
         return f"<Post(id={self.id}, title={self.title}), content={self.content}>"
+
+    def increase_view_count(self):
+        self.view_count += 1
+
+    def change_likes_count(self, count: int):
+        self.likes_count += count
