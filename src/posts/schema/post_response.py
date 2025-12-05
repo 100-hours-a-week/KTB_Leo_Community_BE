@@ -8,7 +8,7 @@ class PostResponse(BaseModel):
     title: str
     content: str
     article_image: str = None
-    author_id: int
+    member_id: int
     view_count: int
     likes_count: int
     comments_count: int

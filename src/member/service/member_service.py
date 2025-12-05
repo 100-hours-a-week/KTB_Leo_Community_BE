@@ -5,6 +5,7 @@ from auth.repository.refresh_token_repository import RefreshTokenRepository
 from auth.utils.jwt_provider import JwtProvider
 from member.model.member import Member
 from member.repository.member_repository import MemberRepository
+from member.schema.member_request import SignUpRequest, UpdateMemberRequest  # 타입 힌트용
 from member.schema.member_response import MemberResponse
 
 
@@ -15,31 +16,28 @@ class MemberService:
         self.repository = member_repository
         self.token_repository = token_repository
 
-    def create_member(self, sign_up_requset):
-        if self.repository.find_by_email(sign_up_requset.email):
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
-        hashed_password: str = self.hash_password(sign_up_requset.password)
+    def create_member(self, sign_up_request: SignUpRequest) -> MemberResponse:
+        if self.repository.find_by_email(str(sign_up_request.email)):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="이미 등록된 이메일입니다.")
+
+        hashed_password: str = self.hash_password(sign_up_request.password)
 
         member = Member(
-            email=sign_up_requset.email,
+            email=str(sign_up_request.email),
             password=hashed_password,
-            nickname=sign_up_requset.nickname,
-            profile_image=sign_up_requset.profile_image,
+            nickname=sign_up_request.nickname,
+            profile_image=sign_up_request.profile_image,
         )
 
         created = self.repository.save(member)
-        return MemberResponse(
-            id=created.id,
-            email=created.email,
-            nickname=created.nickname,
-            profile_image=created.profile_image
-        )
+
+        return MemberResponse.from_orm(created)
 
     def hash_password(self, plain_password):
-        hashed_password = bcrypt.hashpw(plain_password.encode(self.encoding_type),
-                                        salt=bcrypt.gensalt()
-                                        )
-        return hashed_password.decode(self.encoding_type)
+        return bcrypt.hashpw(
+            plain_password.encode(self.encoding_type),
+            bcrypt.gensalt()
+        ).decode(self.encoding_type)
 
     def verify_password(self, plain_password, hashed_password) -> bool:
         # todo : 예외처리
@@ -67,3 +65,16 @@ class MemberService:
 
     def logout(self, refresh_token: str):
         self.token_repository.delete_by_token(refresh_token)
+
+    def update_member(self, member_id: int, request: UpdateMemberRequest) -> Member:
+        member = self.repository.find_by_id(member_id)
+        if not member:
+            raise HTTPException(status_code=404, detail="사용자를 찾을 수 없습니다.")
+
+        if request.nickname is not None:
+            member.nickname = request.nickname
+
+        if request.profile_image is not None:
+            member.profile_image = request.profile_image
+
+        return self.repository.save(member)

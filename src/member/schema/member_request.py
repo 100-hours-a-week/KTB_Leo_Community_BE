@@ -8,7 +8,7 @@ class SignUpRequest(BaseModel):
     email: EmailStr
     password: str
     nickname: str
-    profile_image: str
+    profile_image: Optional[str] = None
 
     @validator('email')
     def validate_email(self, v):
@@ -20,3 +20,8 @@ class SignUpRequest(BaseModel):
 class SignInRequest(BaseModel):
     email: str
     password: str
+
+
+class UpdateMemberRequest(BaseModel):
+    nickname: Optional[str] = None
+    profile_image: Optional[str] = None
