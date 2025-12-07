@@ -9,6 +9,7 @@ class PostResponse(BaseModel):
     content: str
     article_image: str = None
     member_id: int
+    nickname: str
     view_count: int
     likes_count: int
     comments_count: int

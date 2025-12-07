@@ -28,3 +28,7 @@ class MemberRepository:
 
     def find_all(self) -> List[Member]:
         return self.session.scalars(select(Member)).all()
+
+    def delete(self, member: Member) -> None:
+        self.session.delete(member)
+        self.session.commit()

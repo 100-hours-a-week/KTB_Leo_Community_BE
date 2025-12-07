@@ -13,6 +13,7 @@ class Member(Base):
     nickname = Column(String(50), nullable=False)
     profile_image = Column(String(255), nullable=True)
 
-    posts = relationship("Post", back_populates="member")
-    liked_posts = relationship("PostLike", back_populates="member")
-    comments = relationship("Comment", back_populates="member")
+    posts = relationship("Post", back_populates="member", cascade="all, delete-orphan")
+    liked_posts = relationship("PostLike", back_populates="member", cascade="all, delete-orphan")
+    comments = relationship("Comment", back_populates="member", cascade="all, delete-orphan")
+    refresh_tokens = relationship("RefreshToken", back_populates="member", cascade="all, delete-orphan")

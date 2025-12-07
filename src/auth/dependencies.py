@@ -46,3 +46,22 @@ def get_refresh_token_from_cookie(request: Request) -> str:
             detail="리프레시 토큰이 없습니다."
         )
     return refresh_token
+
+
+def get_optional_current_member(
+        request: Request,
+        db: Session = Depends(get_db)
+) -> Member | None:
+    access_token = request.cookies.get("accessToken")
+
+    if not access_token:
+        return None
+
+    member_id = JwtProvider.decode_token(access_token)
+    if not member_id:
+        return None
+
+    member_repository = MemberRepository(db)
+    member = member_repository.session.query(Member).filter(Member.id == int(member_id)).first()
+
+    return member
