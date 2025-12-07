@@ -13,7 +13,6 @@ class AuthService:
 
     def login(self, email: str, password: str) -> dict:
         member = self.member_repo.find_by_email(email)
-        # todo : 비밀번호 검증
         if not member:
             raise HTTPException(status_code=400, detail="아이디 또는 비밀번호 오류")
 

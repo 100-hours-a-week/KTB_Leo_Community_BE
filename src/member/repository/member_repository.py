@@ -1,4 +1,4 @@
-from typing import Optional, List  # List 타입 힌트 추가
+from typing import Optional, List
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session

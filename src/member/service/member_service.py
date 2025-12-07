@@ -5,7 +5,7 @@ from auth.repository.refresh_token_repository import RefreshTokenRepository
 from auth.utils.jwt_provider import JwtProvider
 from member.model.member import Member
 from member.repository.member_repository import MemberRepository
-from member.schema.member_request import SignUpRequest, UpdateMemberRequest, UpdatePasswordRequest  # 타입 힌트용
+from member.schema.member_request import SignUpRequest, UpdateMemberRequest, UpdatePasswordRequest
 from member.schema.member_response import MemberResponse
 
 

@@ -6,7 +6,6 @@ from fastapi import UploadFile, HTTPException
 
 
 class FileService:
-    # 이미지를 저장할 로컬 디렉토리 경로 (src/static/images)
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     UPLOAD_DIR = os.path.join(BASE_DIR, "src", "static", "images")
 
