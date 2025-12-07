@@ -8,7 +8,7 @@ from auth.utils.cookie_manager import CookieManager
 from database.connection import get_db
 from member.model.member import Member
 from member.repository.member_repository import MemberRepository
-from member.schema.member_request import SignUpRequest, SignInRequest, UpdateMemberRequest
+from member.schema.member_request import SignUpRequest, SignInRequest, UpdateMemberRequest, UpdatePasswordRequest
 from member.schema.member_response import MemberResponse
 from member.service.member_service import MemberService
 
@@ -43,7 +43,7 @@ def sign_in(
         refresh_token=login_result["refresh_token"]
     )
 
-    return MemberResponse.from_orm(login_result["member"])
+    return MemberResponse.model_validate(login_result["member"])
 
 
 @router.post("/logout")
@@ -60,6 +60,13 @@ def logout(
     return {"message": "Logout Successful"}
 
 
+@router.get("/me", response_model=MemberResponse)
+def get_my_profile(
+        member: Member = Depends(get_current_member)
+):
+    return MemberResponse.model_validate(member)
+
+
 @router.patch("/me", response_model=MemberResponse)
 def update_my_profile(
         request: UpdateMemberRequest,
@@ -67,3 +74,23 @@ def update_my_profile(
         service: MemberService = Depends(get_member_service)
 ):
     return service.update_member(member.id, request)
+
+
+@router.patch("/password", status_code=status.HTTP_200_OK)
+def update_password(
+        request: UpdatePasswordRequest,
+        member: Member = Depends(get_current_member),
+        service: MemberService = Depends(get_member_service)
+):
+    service.update_password(member.id, request)
+    return {"message": "비밀번호가 성공적으로 변경되었습니다."}
+
+
+@router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
+def withdraw_member(
+        response: Response,
+        member: Member = Depends(get_current_member),
+        service: MemberService = Depends(get_member_service)
+):
+    service.delete_member(member.id)
+    CookieManager.clear_login_cookies(response)

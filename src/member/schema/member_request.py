@@ -25,3 +25,8 @@ class SignInRequest(BaseModel):
 class UpdateMemberRequest(BaseModel):
     nickname: Optional[str] = None
     profile_image: Optional[str] = None
+
+
+class UpdatePasswordRequest(BaseModel):
+    old_password: str
+    new_password: str

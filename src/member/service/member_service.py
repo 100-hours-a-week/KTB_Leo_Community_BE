@@ -5,7 +5,7 @@ from auth.repository.refresh_token_repository import RefreshTokenRepository
 from auth.utils.jwt_provider import JwtProvider
 from member.model.member import Member
 from member.repository.member_repository import MemberRepository
-from member.schema.member_request import SignUpRequest, UpdateMemberRequest  # 타입 힌트용
+from member.schema.member_request import SignUpRequest, UpdateMemberRequest, UpdatePasswordRequest
 from member.schema.member_response import MemberResponse
 
 
@@ -31,7 +31,7 @@ class MemberService:
 
         created = self.repository.save(member)
 
-        return MemberResponse.from_orm(created)
+        return MemberResponse.model_validate(created)
 
     def hash_password(self, plain_password):
         return bcrypt.hashpw(
@@ -78,3 +78,21 @@ class MemberService:
             member.profile_image = request.profile_image
 
         return self.repository.save(member)
+
+    def delete_member(self, member_id: int):
+        member = self.repository.find_by_id(member_id)
+        if not member:
+            raise HTTPException(status_code=404, detail="사용자를 찾을 수 없습니다.")
+        self.repository.delete(member)
+
+    def update_password(self, member_id: int, request: UpdatePasswordRequest) -> None:
+        member = self.repository.find_by_id(member_id)
+        if not member:
+            raise HTTPException(status_code=404, detail="사용자를 찾을 수 없습니다.")
+
+        if not self.verify_password(request.old_password, member.password):
+            raise HTTPException(status_code=400, detail="기존 비밀번호가 틀렸습니다.")
+
+        new_hashed_password = self.hash_password(request.new_password)
+        member.password = new_hashed_password
+        self.repository.save(member)

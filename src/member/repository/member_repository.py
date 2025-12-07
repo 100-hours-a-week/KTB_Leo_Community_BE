@@ -1,4 +1,4 @@
-from typing import Optional, List  # List 타입 힌트 추가
+from typing import Optional, List
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -28,3 +28,7 @@ class MemberRepository:
 
     def find_all(self) -> List[Member]:
         return self.session.scalars(select(Member)).all()
+
+    def delete(self, member: Member) -> None:
+        self.session.delete(member)
+        self.session.commit()
