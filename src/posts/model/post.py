@@ -13,6 +13,7 @@ class Post(Base):
     title = Column(String(100), nullable=False, index=True)
     content = Column(Text, nullable=False)
     article_image = Column(String(100), nullable=True)
+    summary = Column(Text, nullable=True)
 
     member_id = Column(Integer, ForeignKey("member.id"), nullable=False, index=True)
     view_count = Column(Integer, default=0)

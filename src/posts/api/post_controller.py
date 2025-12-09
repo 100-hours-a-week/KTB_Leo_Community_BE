@@ -81,3 +81,17 @@ def like_post(
         like_service: PostLikeService = Depends(get_post_like_service),
 ):
     return like_service.toggle_like(post_id, member.id)
+
+
+from fastapi.responses import StreamingResponse
+
+
+@router.post("/{post_id}/summary", status_code=status.HTTP_200_OK)
+async def generate_summary(
+        post_id: int,
+        service: PostService = Depends(get_post_service)
+):
+    return StreamingResponse(
+        service.generate_summary(post_id),
+        media_type="text/plain"
+    )
