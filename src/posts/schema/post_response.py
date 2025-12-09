@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -7,6 +8,7 @@ class PostResponse(BaseModel):
     id: int
     title: str
     content: str
+    summary: Optional[str] = None
     article_image: str = None
     member_id: int
     nickname: str

@@ -1,3 +1,4 @@
+import requests
 from fastapi import HTTPException
 from starlette import status
 
@@ -33,6 +34,46 @@ class PostService:
         post.nickname = post.member.nickname
 
         return post
+
+    async def generate_summary(self, post_id: int):
+        post = self.post_repository.find_by_id(post_id)
+        if not post:
+            raise HTTPException(status_code=404, detail="게시글을 찾을 수 없습니다.")
+
+        if post.summary:
+            yield post.summary
+            return
+
+        full_summary = ""
+        try:
+            response = requests.post(
+                "http://localhost:8001/ai/generate-stream",
+                json={
+                    "prompt": post.content,
+                    "max_tokens": 1000,
+                    "temperature": 0.2
+                },
+                stream=False,
+                timeout=180
+            )
+            response.raise_for_status()
+
+            data = response.json()
+            lines = data.get("lines", [])
+
+            formatted_summary = "\n".join([f"- {line}" for line in lines])
+
+            full_summary = formatted_summary
+            yield full_summary
+
+
+            if full_summary:
+                post.summary = full_summary
+                self.post_repository.save(post)
+
+        except Exception as e:
+            print(f"Failed to generate summary: {e}")
+            yield f"[Error: {str(e)}]"
 
     def create_post(self, request: CreatePostRequest, member_id: int) -> Post:
         post = Post(
